@@ -92,6 +92,32 @@
         display: inline;
       }
 
+      /* --- Review Section: Mobile Responsive Fix --- */
+@media (max-width: 768px) {
+  /* Stack review cards vertically on mobile */
+  .review-card .row {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  .review-card .card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border-radius: 12px;
+  }
+  .review-card .card-body {
+    padding: 1rem 1.2rem !important;
+  }
+  .review-card .card-title {
+    font-size: 1.05rem;
+  }
+  .review-card .card-text {
+    font-size: 0.98rem;
+  }
+}
+
+
     </style>
     <!-- Leaflet CSS for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -151,7 +177,7 @@
         <h2 class="h4 mb-4 fw-semibold">Reviews</h2>
       
         <!-- List of all reviews -->
-        <div class="d-flex flex-column gap-3">
+        <div class=" review-card d-flex flex-column gap-3">
           <% if (listing.reviews.length === 0) { %>
             <p class="text-muted">No reviews yet. Be the first to review!</p>
           <% } else { %>       
