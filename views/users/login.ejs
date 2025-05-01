@@ -1,0 +1,129 @@
+<div class="airbnb-login-bg d-flex justify-content-center min-vh-100">
+  <div class="airbnb-login-card shadow-sm p-4 p-md-5">
+    <div class="text-center mb-4">
+      <i class="fa-brands fa-airbnb fa-2x text-danger mb-2"></i>
+      <h2 class="fw-bold mb-1">Welcome back</h2>
+      <div class="text-muted mb-2">Login to your Wanderlust account</div>
+    </div>
+    <form action="/login" method="POST" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold">Username</label>
+        <input type="text" name="username" id="username" class="form-control airbnb-input" required autofocus />
+        <div class="invalid-feedback">Please enter a username.</div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold">Password</label>
+        <input type="password" name="password" id="password" class="form-control airbnb-input" required />
+        <div class="invalid-feedback">Please enter a password.</div>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <input type="checkbox" id="remember" name="remember" class="form-check-input me-1" />
+          <label for="remember" class="form-check-label small">Remember me</label>
+        </div>
+        <a href="/forgot" class="small text-decoration-none text-danger">Forgot password?</a>
+      </div>
+      <button class="btn airbnb-login-btn-main w-100 mb-3" type="submit">Login</button>
+      <div class="text-center text-muted mb-2">or</div>
+      <a href="/auth/google" class="google-login-btn mx-auto mb-3" title="Login with Google">
+        <span class="google-icon">
+          <!-- Google "G" SVG (official multi-color) -->
+          <svg width="32" height="32" viewBox="0 0 48 48">
+            <g>
+              <path fill="#4285F4" d="M24 9.5c3.54 0 6.73 1.22 9.25 3.23l6.88-6.88C36.7 2.66 30.73 0 24 0 14.82 0 6.76 5.13 2.69 12.56l7.99 6.2C13.06 13.37 18.17 9.5 24 9.5z"/>
+              <path fill="#34A853" d="M46.14 24.55c0-1.64-.15-3.22-.42-4.75H24v9.02h12.44c-.54 2.89-2.18 5.32-4.63 6.98l7.13 5.54c4.17-3.85 6.6-9.53 6.6-16.79z"/>
+              <path fill="#FBBC05" d="M9.68 28.76A14.48 14.48 0 0 1 9.5 24c0-1.65.29-3.24.79-4.76l-7.99-6.2C.9 16.17 0 19.01 0 22c0 2.98.9 5.82 2.5 8.24l7.18-5.48z"/>
+              <path fill="#EA4335" d="M24 48c6.48 0 11.92-2.14 15.89-5.85l-7.13-5.54C30.91 38.45 27.7 39.5 24 39.5c-5.83 0-10.94-3.87-13.32-9.26l-7.99 6.2C6.76 42.87 14.82 48 24 48z"/>
+              <path fill="none" d="M0 0h48v48H0z"/>
+            </g>
+          </svg>
+        </span>
+      </a>
+      <div class="text-center mt-2">
+        <span class="small text-muted">Don't have an account?</span>
+        <a href="/signup" class="text-danger text-decoration-none fw-semibold ms-1">Sign Up</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+.airbnb-login-bg {
+  background: #f7f7f7;
+  min-height: 100vh;
+}
+.airbnb-login-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 6px 32px rgba(60,64,67,0.13);
+  margin: 32px 0;
+}
+.airbnb-input {
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  font-size: 1.08rem;
+  padding: 10px 14px;
+  background: #fafafa;
+  transition: border-color 0.2s;
+}
+.airbnb-input:focus {
+  border-color: #ff385c;
+  box-shadow: 0 2px 8px rgba(255,56,92,0.07);
+  background: #fff;
+}
+.airbnb-login-btn-main {
+  background: #ff385c;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 14px;
+  font-size: 1.13rem;
+  padding: 10px 0 10px 0;
+  box-shadow: 0 2px 8px rgba(255,56,92,0.08);
+  border: none;
+  transition: background 0.2s;
+}
+.airbnb-login-btn-main:hover,
+.airbnb-login-btn-main:focus {
+  background: #e31c5f;
+  color: #fff;
+}
+.google-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(60,64,67,.08), 0 1.5px 4px rgba(60,64,67,.16);
+  transition: box-shadow 0.2s, border-color 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+  margin: 0 auto;
+}
+.google-login-btn:hover,
+.google-login-btn:focus {
+  box-shadow: 0 4px 12px rgba(60,64,67,.18);
+  border-color: #4285F4;
+}
+.google-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.google-icon svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+@media (max-width: 576px) {
+  .airbnb-login-card {
+    padding: 1.5rem 0.7rem;
+    max-width: 95vw;
+  }
+}
+</style>

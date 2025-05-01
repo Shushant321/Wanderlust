@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= listing.title %> | Wanderlust</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f8;
+        margin: 0;
+        padding: 0;
+        color: #2d3436;
+      }
+
+      .contain {
+        max-width: 960px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 18px;
+      }
+
+      .image-banner {
+        width: 100%;
+        height: 450px;
+        object-fit: cover;
+        border-radius: 16px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: #2c3e50;
+      }
+
+      p.description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #636e72;
+        margin-bottom: 20px;
+      }
+
+      .details {
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+
+      .price {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #00b894;
+      }
+
+      .btn-group {
+        margin-top: 30px;
+      }
+
+      .btn {
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-right: 15px;
+      }
+
+      .btn-edit {
+        background-color: #0984e3;
+        color: white;
+      }
+
+      .btn-edit:hover {
+        background-color: #74b9ff;
+      }
+
+      .btn-delete {
+        background-color: #d63031;
+        color: white;
+      }
+
+      .btn-delete:hover {
+        background-color: #ff7675;
+      }
+
+      form {
+        display: inline;
+      }
+
+    </style>
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="contain">
+      <img src="<%= listing.image.url %>" alt="Image of <%= listing.title %>" class="image-banner" />
+
+      <h1><%= listing.title %></h1>
+      <p> Owned By><i> <%= listing.owner.username %> </i></p>
+      <p class="description"><%= listing.description %></p>
+
+      <p class="details location"><strong>Location:</strong> <%= listing.location %>, <%= listing.country %></p>
+      <p class="details price">₹ <%= listing.price.toLocaleString("en-IN") %></p>
+      <div class="btn-group">
+        <a href="/listings/<%= listing._id %>/edit" class="btn btn-edit ">Edit</a>
+      </div>
+      <div class="btn-group">
+        <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+          <button class="btn btn-delete ">Delete</button>
+        </form>
+      </div>
+      <hr />
+      <!-- Review Form  -->
+    <% if(currUser) { %>
+      <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class = "needs-validation" >
+        <div class="mb-3">
+        <label for="rating" class="form-label">Rating</label>
+        <fieldset class="starability-slot">
+          <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+          <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+          <label for="first-rate1" title="Terrible">1 star</label>
+          <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+          <label for="first-rate2" title="Not good">2 stars</label>
+          <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+          <label for="first-rate3" title="Average">3 stars</label>
+          <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+          <label for="first-rate4" title="Very good">4 stars</label>
+          <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+          <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
+        </div>
+        <div class="mb-3">
+          <label for="comment" class="form-label">Comment</label>
+          <textarea class="form-control" name="review[comment]" 
+          id="comment" rows="3" required></textarea>
+          <div class="invalid-feedback">
+            Please provide a comment.
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Post Review</button>
+      </form>
+      <hr />
+      <section class="mt-5">
+    <% } %> 
+        <h2 class="h4 mb-4 fw-semibold">Reviews</h2>
+      
+        <!-- List of all reviews -->
+        <div class="d-flex flex-column gap-3">
+          <% if (listing.reviews.length === 0) { %>
+            <p class="text-muted">No reviews yet. Be the first to review!</p>
+          <% } else { %>       
+            <div class="row">
+            <% listing.reviews.forEach(review => { %>
+              <div class="card shadow-sm col-5 ms-3 mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">@<%= review.author.username %></h5>
+                  <p class="starability-result" data-rating="<%= review.rating%>">
+                  </p>
+                  <p class="card-text"><%= review.comment%></p>
+                  <p class="text-muted small mb-2"></p>
+                  <!-- Optional: Delete button -->
+                  <form 
+                    action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" 
+                    method="POST"
+                  >
+                    <button 
+                      type="submit" 
+                      class="btn btn-md btn-dark"
+                    >
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+          <% } %>
+        </div>
+
+      <!-- MAP SECTION START -->
+<hr>
+<h2 style="margin-top:32px;">Location on Map</h2>
+<div id="map" style="height: 400px; border-radius: 12px; margin-bottom: 40px;"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var lat = <%= typeof listing.lat !== "undefined" ? listing.lat : "null" %> ;
+  var lng = <%= typeof listing.lng !== "undefined" ? listing.lng : "null" %> ;
+
+  if (lat !== null && lng !== null) {
+    var map = L.map('map').setView([lat, lng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    L.marker([lat, lng]).addTo(map)
+      .bindPopup('<%= listing.location %>')
+      .openPopup();
+  }
+</script>
+<!-- MAP SECTION END -->
+
+
+    </div> <!-- .container ka end -->
+  </body>
+</html>

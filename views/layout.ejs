@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("./partials/header") %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/rating.css" />
+  </head>
+  <body>
+    <% if (page !== 'login' && page !== 'signup') { %>
+      <%- include("./partials/navbar") %>
+    <% } else { %>
+      <!-- Minimal header for login/signup -->
+      <div class="text-center py-4">
+        <a href="/listings" style="text-decoration:none;">
+          <span style="font-size:2.1rem; font-weight:700; color:#FF5A5F; display:inline-flex; align-items:center;">
+            <i class="fa-brands fa-airbnb me-2"></i> Wanderlust
+          </span>
+        </a>
+      </div>
+    <% } %>
+    
+
+    <div class="container mt-4">
+      <%- include("./partials/flash.ejs") %>
+      <%- body %>
+    </div>
+
+    <%- include("./partials/footer") %>
+    <script src="/js/script.js"></script>
+    
+    <!-- MOBILE-ONLY BOTTOM NAV (will be hidden on desktop via CSS) -->
+    <nav class="airbnb-bottom-nav d-flex justify-content-around align-items-center bg-white shadow-lg py-1 position-fixed bottom-0 w-100" style="z-index:1030;">
+      <a href="/listings" class="text-center text-danger">
+        <i class="fa-solid fa-magnifying-glass fa-lg"></i><br>
+        <span class="small">Explore</span>
+      </a>
+      <a href="/wishlist" class="text-center text-muted">
+        <i class="fa-regular fa-heart fa-lg"></i><br>
+        <span class="small">Wishlist</span>
+      </a>
+      <a href="/login" class="text-center text-muted">
+        <i class="fa-regular fa-user fa-lg"></i><br>
+        <span class="small">Log in</span>
+      </a>
+    </nav>
+  </body>
+</html>

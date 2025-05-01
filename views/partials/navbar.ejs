@@ -1,0 +1,69 @@
+<nav class="navbar navbar-expand-lg airbnb-navbar shadow-sm py-3 bg-white sticky-top" style="width:100%; border-radius:0;">
+  <div class="container">
+    <!-- Left: Logo -->
+    <a class="navbar-brand fw-bold fs-3 text-danger" href="/listings">
+      <i class="fa-brands fa-airbnb me-2"></i>Wanderlust
+    </a>
+
+    <!-- Airbnb Style Search Bar -->
+    <form autocomplete="off" id="searchForm"
+      action="/listings/search"
+      method="GET"
+      class="airbnb-searchbar d-flex flex-wrap align-items-center justify-content-center gap-2 shadow-sm px-3 py-2 position-relative"
+      style="max-width: 700px; margin: auto 16px auto; background: #fff; border-radius:32px;">
+      <div class="airbnb-searchfield">
+        <input type="text" name="location" id="searchInput"
+          class="form-control airbnb-input"
+          placeholder="Location" />
+        <div id="autocompleteResults" class="autocomplete-dropdown"></div>
+      </div>
+      <button type="submit" class="btn airbnb-search-btn d-flex align-items-center gap-2 px-4 rounded-pill">
+        <i class="fa fa-search"></i>
+        <span class="d-none d-md-inline">Search</span>
+      </button>
+    </form>
+
+    <!-- Right: Globe, Host, User Menu -->
+    <div class="d-flex align-items-center gap-3">
+      <a href="#" class="text-dark d-none d-lg-inline"><i class="fa-solid fa-globe"></i></a>
+      <a href="/listings/new" class="text-dark fw-semibold d-none d-lg-inline">Become a Host</a>
+      <a href="/wishlist" class="text-dark fw-semibold d-none d-lg-inline">
+        <i class="fa-regular fa-heart"></i> Wishlist
+      </a>
+      <div class="dropdown">
+        <button class="btn airbnb-user-menu d-flex align-items-center gap-2"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+          <i class="fa-solid fa-user-circle fs-5"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item show-on-mobile" href="/listings">Search</a></li>
+          <li><a class="dropdown-item" href="/listings/new">Become a Host</a></li>
+          <li><a class="dropdown-item" href="/login">Login</a></li>
+          <li><a class="dropdown-item" href="/signup">Sign Up</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/logout">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+  /* Hide by default */
+.show-on-mobile {
+  display: none !important;
+}
+
+/* Show only on small screens (≤768px) */
+@media (max-width: 768px) {
+  .show-on-mobile {
+    display: block !important;
+  }
+}
+
+</style>
+

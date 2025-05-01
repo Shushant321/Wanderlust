@@ -1,0 +1,16 @@
+<div class="airbnb-login-bg d-flex align-items-center justify-content-center min-vh-100">
+  <div class="airbnb-login-card shadow-sm p-4 p-md-5">
+    <h2 class="fw-bold mb-3 text-center">Reset Password</h2>
+    <form action="/reset/<%= token %>" method="POST">
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold">New Password</label>
+        <input type="password" name="password" id="password" class="form-control airbnb-input" required />
+      </div>
+      <div class="mb-3">
+        <label for="confirm" class="form-label fw-semibold">Confirm Password</label>
+        <input type="password" name="confirm" id="confirm" class="form-control airbnb-input" required />
+      </div>
+      <button class="btn airbnb-login-btn-main w-100" type="submit">Reset Password</button>
+    </form>
+  </div>
+</div>

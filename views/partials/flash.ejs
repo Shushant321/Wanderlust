@@ -1,0 +1,31 @@
+<% if(success && success.length) { %>
+    <div id="flash-alert" class="alert alert-success alert-dismissible fade show col-6 offset-3" role="alert">
+        <%= success %> 
+        <button type="button" 
+        class="btn-close" 
+        data-bs-dismiss="alert"
+         aria-label="Close">
+        </button>
+    </div>
+    <% } %>
+
+<% if(error && error.length) { %>
+    <div id="flash-alert" class="alert alert-danger alert-dismissible fade show col-6 offset-3" role="alert">
+        <%= error %> 
+        <button type="button" 
+        class="btn-close" 
+        data-bs-dismiss="alert"
+         aria-label="Close">
+        </button>
+    </div>
+    <% } %>
+    
+    <script>
+        const flashAlert = document.getElementById("flash-alert");
+        if(flashAlert){
+          setTimeout(() => {
+            flashAlert.style.display = "none";
+          }, 3000); // 2 seconds
+        }
+      </script>
+      
