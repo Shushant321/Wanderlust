@@ -56,6 +56,11 @@ app.use(expressLayouts);
 app.set("layout", "layout");  // views/layout.ejs
 app.use(express.static("public"));
 
+app.get('/', (req, res) => {
+  res.redirect('/listings');
+});
+
+
 
 const store = MongoStore.create({
   mongoUrl: dburl,
@@ -110,7 +115,7 @@ app.use('/', wishlistRoutes);
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: 'http://localhost:8080/auth/google/callback'
+  callbackURL: 'https://wanderlust-87b0.onrender.com/auth/google/callback'
 },
 async (accessToken, refreshToken, profile, done) => {
   let user = await User.findOne({ googleId: profile.id });
