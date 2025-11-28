@@ -35,17 +35,16 @@ const wishlistRoutes = require('./routes/wishlist');
 
 
 // ===== DATABASE CONNECT =====
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
 async function main() {
-  await mongoose.connect(dburl);
+  await mongoose.connect(dburl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    family: 4 // IPv4 use karta hai, kabhi kabhi IPv6 issues ke liye helpful
+  });
 }
+
 
 // ===== VIEW ENGINE & MIDDLEWARE =====
 app.set("view engine", "ejs");
