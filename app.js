@@ -33,27 +33,33 @@ const userRouter = require("./routes/user.js");
 const searchRoutes = require('./routes/search.js');
 const wishlistRoutes = require('./routes/wishlist');
 
-// ===== DATABASE CONNECT ===== ✅ FIXED: Complete connection with TLS options
+// ===== DATABASE CONNECT ===== (Replace this entire section)
 async function main() {
-  await mongoose.connect(dburl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000,
-    socketTimeoutMS: 45000,
-    family: 4,
-    tls: true,
-    tlsAllowInvalidCertificates: true  // ✅ SSL error fix
-  });
+  console.log("🔍 Connecting to MongoDB with URL:", dburl ? "✅ SET" : "❌ MISSING");
+  
+  try {
+    await mongoose.connect(dburl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 60000,  // 1 minute timeout
+      socketTimeoutMS: 60000,
+      family: 4,
+      maxPoolSize: 5,
+      bufferMaxEntries: 0,
+      connectTimeoutMS: 30000,
+      ssl: true,
+      tls: true,
+      tlsAllowInvalidCertificates: true
+    });
+    console.log("✅ MongoDB Connected Successfully");
+  } catch (error) {
+    console.error("❌ MongoDB Connection FAILED:", error.message);
+    process.exit(1); // Exit if DB fails
+  }
 }
 
-// ✅ FIXED: Connection call added with proper error handling
-main()
-  .then(() => {
-    console.log("✅ MongoDB Connected Successfully");
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB Connection Error:", err);
-  });
+// Call connection IMMEDIATELY after defining
+main();
 
 // ===== VIEW ENGINE & MIDDLEWARE =====
 app.set("view engine", "ejs");
@@ -68,19 +74,20 @@ app.get('/', (req, res) => {
   res.redirect('/listings');
 });
 
-const store = MongoStore.create({
-  mongoUrl: dburl,
-  secret: process.env.SESSION_SECRET,
-  touchAfter: 24 * 60 * 60,
-  mongooseConnection: mongoose.connection,  // ✅ Use existing mongoose connection
-  clientOptions: {
-    serverSelectionTimeoutMS: 30000,
-    socketTimeoutMS: 45000,
-    family: 4,
-    tls: true,
-    tlsAllowInvalidCertificates: true
-  }
-});
+const store = new session.MemoryStore();
+// const store = MongoStore.create({
+//   mongoUrl: dburl,
+//   secret: process.env.SESSION_SECRET,
+//   touchAfter: 24 * 60 * 60,
+//   mongooseConnection: mongoose.connection,  // ✅ Use existing mongoose connection
+//   clientOptions: {
+//     serverSelectionTimeoutMS: 30000,
+//     socketTimeoutMS: 45000,
+//     family: 4,
+//     tls: true,
+//     tlsAllowInvalidCertificates: true
+//   }
+// });
 
 
 store.on("error", function (e) {
@@ -89,7 +96,7 @@ store.on("error", function (e) {
 
 const sessionOptions = {
   store,
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'fallback-secret',
   resave: false,
   saveUninitialized: true,
   cookie: {
