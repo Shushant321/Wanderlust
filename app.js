@@ -17,7 +17,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require("./models/user.js");
 const LocalStrategy = require("passport-local");
 
-const dburl = process.env.ATLASDB_URL || "mongodb://localhost:27017/airbnb";
+// ✅ FIXED: Correct environment variable name
+const dburl = process.env.MONGODB_URI || "mongodb://localhost:27017/airbnb";
 
 // Always define a default page variable for all EJS views
 app.use((req, res, next) => {
@@ -25,14 +26,12 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // ===== ROUTES =====
-const listingRouter = require("./routes/listing.js");  // <-- plural, consistent
+const listingRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const searchRoutes = require('./routes/search.js');
 const wishlistRoutes = require('./routes/wishlist');
-
 
 // ===== DATABASE CONNECT ===== ✅ FIXED: Complete connection with TLS options
 async function main() {
@@ -56,27 +55,33 @@ main()
     console.error("❌ MongoDB Connection Error:", err);
   });
 
-
 // ===== VIEW ENGINE & MIDDLEWARE =====
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(expressLayouts);
-app.set("layout", "layout");  // views/layout.ejs
+app.set("layout", "layout");
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
   res.redirect('/listings');
 });
 
-
-
 const store = MongoStore.create({
   mongoUrl: dburl,
   secret: process.env.SESSION_SECRET,
   touchAfter: 24 * 60 * 60,
+  mongooseConnection: mongoose.connection,  // ✅ Use existing mongoose connection
+  clientOptions: {
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    family: 4,
+    tls: true,
+    tlsAllowInvalidCertificates: true
+  }
 });
+
 
 store.on("error", function (e) {
   console.log("Session Store Error", e);
@@ -84,16 +89,15 @@ store.on("error", function (e) {
 
 const sessionOptions = {
   store,
-  secret : process.env.SESSION_SECRET,
-  resave : false,
-  saveUninitialized : true,
-  cookie : {
-    httpOnly : true,
-    expires : Date.now() + 1000 * 60 * 60 * 24 * 7,
-    maxAge : 1000 * 60 * 60 * 24 * 7
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7
   },
 };
-
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -114,12 +118,11 @@ app.use((req, res, next) => {
 });
 
 // ===== ROUTES MOUNTING (ORDER MATTERS!) =====
-app.use('/', searchRoutes);           // /suggest etc.
-app.use('/listings', listingRouter);  // /listings, /listings/:id, /listings/search
+app.use('/', searchRoutes);
+app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewsRouter);
-app.use('/', userRouter);             // signup, login, logout, etc.
+app.use('/', userRouter);
 app.use('/', wishlistRoutes);
-
 
 // ===== GOOGLE AUTH =====
 passport.use(new GoogleStrategy({
@@ -137,8 +140,7 @@ async (accessToken, refreshToken, profile, done) => {
     });
   }
   return done(null, user);
-}
-));
+}));
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -149,11 +151,11 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // ===== 404 & ERROR HANDLING =====
-app.all("*", (req, res , next) => {
+app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
 });
-app.use((err , req, res , next) => {
-  let {statusCode=500 , message = "Something went wrong"} = err;
+app.use((err, req, res, next) => {
+  let {statusCode=500, message = "Something went wrong"} = err;
   res.status(statusCode).render("error.ejs", { message });
 });
 
