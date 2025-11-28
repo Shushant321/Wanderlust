@@ -36,27 +36,27 @@ const wishlistRoutes = require('./routes/wishlist');
 // ===== DATABASE CONNECT ===== (Replace this entire section)
 async function main() {
   console.log("🔍 Connecting to MongoDB with URL:", dburl ? "✅ SET" : "❌ MISSING");
-  
+
   try {
     await mongoose.connect(dburl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 60000,  // 1 minute timeout
+      serverSelectionTimeoutMS: 60000,
       socketTimeoutMS: 60000,
       family: 4,
       maxPoolSize: 5,
-      bufferMaxEntries: 0,
-      connectTimeoutMS: 30000,
       ssl: true,
       tls: true,
       tlsAllowInvalidCertificates: true
+      // ❌ bufferMaxEntries / buffermaxentries bilkul mat likhna
     });
     console.log("✅ MongoDB Connected Successfully");
   } catch (error) {
-    console.error("❌ MongoDB Connection FAILED:", error.message);
-    process.exit(1); // Exit if DB fails
+    console.error("❌ MongoDB Connection FAILED:", error);
+    process.exit(1);
   }
 }
+
 
 // Call connection IMMEDIATELY after defining
 main();
